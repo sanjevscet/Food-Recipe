@@ -38,9 +38,11 @@ export default function Home() {
       const response = await axios.get(
         "https://www.themealdb.com/api/json/v1/1/filter.php?c=" + activeCategory
       );
+      console.log("calling API: GET RECIPE Start", new Date());
       if (response && response.data && response.data.meals) {
         console.log({ recipesLen: response.data.meals.length });
         setMeals(response.data.meals);
+        console.log("calling API: GET RECIPE Completed", new Date());
       }
     } catch (err) {
       console.error(err);

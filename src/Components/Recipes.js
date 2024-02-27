@@ -3,11 +3,13 @@ import { View, Text, Pressable, Image } from "react-native";
 import MasonryList from "@react-native-seoul/masonry-list";
 import { heightPercentageToDP } from "react-native-responsive-screen";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { useNavigation } from "@react-navigation/native";
 
-import { mealData } from "../Constants";
 import Loading from "./Loading";
 
 export default function Recipes({ categories, meals }) {
+  const navigation = useNavigation();
+
   return (
     <View className="mx-4 space-y-3">
       <Text
@@ -18,14 +20,16 @@ export default function Recipes({ categories, meals }) {
       </Text>
       <View>
         {categories.length === 0 || meals.length === 0 ? (
-          <Loading size="large" className="mt-20" />
+          <Loading size="large" className="mt-40" />
         ) : (
           <MasonryList
             data={meals}
             keyExtractor={(item) => item.id}
             numColumns={2}
             showsVerticalScrollIndicator={false}
-            renderItem={({ item, i }) => <RecipeCard index={i} item={item} />}
+            renderItem={({ item, i }) => (
+              <RecipeCard index={i} item={item} navigation={navigation} />
+            )}
             onEndReachedThreshold={0.1}
           />
         )}
@@ -34,7 +38,7 @@ export default function Recipes({ categories, meals }) {
   );
 }
 
-const RecipeCard = ({ item, index }) => {
+const RecipeCard = ({ item, index, navigation }) => {
   const isEven = index % 2 === 0;
 
   return (
@@ -51,8 +55,11 @@ const RecipeCard = ({ item, index }) => {
           paddingRight: isEven ? 8 : 0,
         }}
         className="flex justify-center mb-4 space-y-1"
+        onPress={() => {
+          navigation.push("RecipeDetail", { ...item });
+        }}
       >
-        <Image
+        <Animated.Image
           source={{ uri: item.strMealThumb }}
           className="bg-black/5"
           style={{
@@ -63,18 +70,7 @@ const RecipeCard = ({ item, index }) => {
                 : heightPercentageToDP(35),
             borderRadius: 35,
           }}
-        />
-        <Image
-          source={{ uri: item.strMealThumb }}
-          className="bg-black/5"
-          style={{
-            width: "100%",
-            height:
-              index % 3 === 0
-                ? heightPercentageToDP(25)
-                : heightPercentageToDP(35),
-            borderRadius: 35,
-          }}
+          sharedTransitionTag={item.strMeal}
         />
         <Text
           style={{ fontSize: heightPercentageToDP(1.5) }}

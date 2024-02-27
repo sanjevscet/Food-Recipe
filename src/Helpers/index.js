@@ -6,6 +6,7 @@ import Animated from "react-native-reanimated";
 export const CachedImage = (props) => {
   const [cachedSource, setCachedSource] = useState(null);
   const { uri } = props;
+  console.log({ uri });
 
   useEffect(() => {
     const getCachedImage = async () => {

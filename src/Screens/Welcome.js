@@ -6,11 +6,14 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
+import { useNavigation } from "@react-navigation/native";
+
 import Animated, { useSharedValue, withSpring } from "react-native-reanimated";
 
 const Welcome = () => {
   const ring1Padding = useSharedValue(0);
   const ring2Padding = useSharedValue(0);
+  const navigation = useNavigation();
 
   useEffect(() => {
     ring1Padding.value = 0;
@@ -24,6 +27,10 @@ const Welcome = () => {
       () => (ring2Padding.value = withSpring(ring2Padding.value + hp(5))),
       300
     );
+
+    setTimeout(() => {
+      navigation.navigate("Home");
+    }, 2500);
   }, []);
 
   return (

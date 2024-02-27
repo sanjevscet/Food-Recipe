@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "1.21.0",
     "@react-native-seoul/masonry-list": "^1.4.2",
     "@react-navigation/native": "^6.1.12",
     "@react-navigation/native-stack": "^6.9.20",
@@ -21,11 +22,11 @@
     "react": "18.2.0",
     "react-native": "0.73.4",
     "react-native-heroicons": "^4.0.0",
-    "react-native-responsive-screen": "^1.4.2",
-    "react-native-webview": "13.6.4",
-    "react-native-youtube-iframe": "^2.3.0",
     "react-native-reanimated": "~3.6.2",
-    "@react-native-async-storage/async-storage": "1.21.0"
+    "react-native-responsive-screen": "^1.4.2",
+    "react-native-svg": "^15.0.0",
+    "react-native-webview": "13.6.4",
+    "react-native-youtube-iframe": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -1,5 +1,5 @@
 import { Image, ScrollView, Text, TextInput, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 
 import {
@@ -8,8 +8,58 @@ import {
 } from "react-native-responsive-screen";
 
 import { BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline";
+import Categories from "../Components/Categories";
+import axios from "axios";
+import Recipes from "../Components/Recipes";
 
 export default function Home() {
+  const [activeCategory, setActiveCategory] = useState();
+  const [categories, setCategories] = useState([]);
+  const [meals, setMeals] = useState([]);
+
+  const getCategories = async () => {
+    try {
+      const response = await axios.get(
+        "https://www.themealdb.com/api/json/v1/1/categories.php"
+      );
+      if (response && response.data && response.data.categories) {
+        console.log({ total: response.data.categories.length });
+        setCategories(response.data.categories);
+        setActiveCategory(response.data.categories[0].strCategory);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getRecipes = async () => {
+    try {
+      console.log({ activeCategory });
+      const response = await axios.get(
+        "https://www.themealdb.com/api/json/v1/1/filter.php?c=" + activeCategory
+      );
+      if (response && response.data && response.data.meals) {
+        console.log({ recipesLen: response.data.meals.length });
+        setMeals(response.data.meals);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+
+  useEffect(() => {
+    activeCategory && getRecipes();
+  }, [activeCategory]);
+
+  const handleChangeCategory = (category) => {
+    setActiveCategory(category);
+    setMeals([]);
+  };
+
   return (
     <View className="flex-1 bg-white">
       <StatusBar style="dark" />
@@ -66,6 +116,22 @@ export default function Home() {
               color={"gray"}
             />
           </View>
+        </View>
+
+        {/* Categories*/}
+        <View>
+          {categories.length > 0 && (
+            <Categories
+              activeCategory={activeCategory}
+              categories={categories}
+              handleChangeCategory={handleChangeCategory}
+            />
+          )}
+        </View>
+
+        {/* Recipes*/}
+        <View>
+          <Recipes categories={categories} meals={meals} />
         </View>
       </ScrollView>
     </View>
